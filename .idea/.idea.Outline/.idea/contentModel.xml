@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\jonas\.Rider2019.2\config\scratches" t="IncludeRecursive" />
     <e p="C:\Users\jonas\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\jonas\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_Outline.-167414026.00" t="ExcludeRecursive" />
-    <e p="C:\Users\jonas\Nextcloud\Code\derivativePicture" t="IncludeFlat">
+    <e p="C:\Users\jonas\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_Outline.1753076096.00" t="ExcludeRecursive" />
+    <e p="C:\Users\jonas\RiderProjects\Outline" t="IncludeFlat">
       <e p="Outline" t="IncludeRecursive">
         <e p="Annotations.cs" t="Include" />
         <e p="App.xaml" t="Include" />
