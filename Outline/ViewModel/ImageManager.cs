@@ -5,41 +5,57 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Microsoft.Win32;
 using Outline.Annotations;
+using Outline.ImageLogic;
 
 namespace Outline.ViewModel
 {
     public class ImageManager : INotifyPropertyChanged
     {
-        private string _text;
+        private BitmapImage _openedImage;
+        private WriteableBitmap _resultingImage;
 
-        public String Text
-        {
-            get { return _text; }
+        public BitmapImage OpenedImage{
+            get => _openedImage;
             set
             {
-                _text = value;
-                OnPropertyChanged(nameof(Text));
+                _openedImage = value;
+                OnPropertyChanged(nameof(OpenedImage));
+            }
+        }
+
+        public WriteableBitmap ResultingImage{
+            get => _resultingImage;
+            set
+            {
+                _resultingImage = value;
+                OnPropertyChanged(nameof(ResultingImage));
             }
         }
 
         public ICommand OpenImage { get; private set; }
 
-
         public ImageManager()
         {
-            OpenImage = new RelayCommand(o => { Text = GetFileContent();});
+            OpenImage = new RelayCommand(o =>
+            {
+                OpenedImage = OpenImageFromFileSystem();
+                var im = new ImageProcessor(OpenedImage);
+                ResultingImage = im.ProcessWithFilter(new object());
+            });
             OpenImage.CanExecute(true);
         }
 
-        public string GetFileContent()
+        private BitmapImage OpenImageFromFileSystem()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if(openFileDialog.ShowDialog() == true)
-                return File.ReadAllText(openFileDialog.FileName);
-            return "Error Reading File";
+//                return File.ReadAllText(openFileDialog.FileName);
+                return new BitmapImage(new Uri(openFileDialog.FileName));
+            return new BitmapImage();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
