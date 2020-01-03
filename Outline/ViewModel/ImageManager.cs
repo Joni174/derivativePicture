@@ -4,12 +4,16 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using Outline.Annotations;
+
+
+//TODO: Reordering of program structure
 
 namespace Outline.ViewModel
 {
@@ -52,15 +56,19 @@ namespace Outline.ViewModel
 
             BitmapImage image = new BitmapImage();
             image.BeginInit();
-            image.UriSource = new Uri("fane.jpg", UriKind.Relative);
+            image.UriSource = new Uri(@"C:\Users\Jonas\Pictures\DoctorWhoWallpaper.jpg");
+            image.DecodePixelWidth = 50;
             image.EndInit();
             OpenedImage = image;
 
-            Console.WriteLine(GetPixel(OpenedImage));
+            
+            var pixels = GetPixel(OpenedImage);
             
             OpenImage = new RelayCommand(o =>
             {
-                OpenedImage = OpenImageFromFileSystem();
+                OpenedImage = CreateFromPixel(image.PixelWidth, image.PixelHeight, pixels);
+                
+                /*OpenedImage = OpenImageFromFileSystem();
 
                 FormatConvertedBitmap newFormatedBitmapSource = new FormatConvertedBitmap();
                 newFormatedBitmapSource.BeginInit();
@@ -78,7 +86,7 @@ namespace Outline.ViewModel
                 newFormatedBitmapSource.DestinationFormat = PixelFormats.Indexed1;
                 newFormatedBitmapSource.EndInit();
                 
-                ResultingImage = newFormatedBitmapSource;
+                ResultingImage = newFormatedBitmapSource;*/
             });
             OpenImage.CanExecute(true);
         }
@@ -90,24 +98,23 @@ namespace Outline.ViewModel
             if(openFileDialog.ShowDialog() == true)
             {
                 image = new BitmapImage(new Uri(openFileDialog.FileName));
-//                image.DecodePixelWidth = 200;
             }
             return image;
         }
 
         private BitmapSource CreateFromPixel(int width, int height, byte[] pixels)
         {
+            Console.WriteLine(PixelFormats.Bgr32.BitsPerPixel);
             BitmapPalette myPalette = BitmapPalettes.Halftone256;
-
             BitmapSource image = BitmapSource.Create(
                 width,
                 height,
                 96,
                 96,
-                PixelFormats.Indexed8,
+                PixelFormats.Bgr32,
                 myPalette,
                 pixels,
-                width);
+                width*4);
             return image;
         }
 
@@ -116,8 +123,7 @@ namespace Outline.ViewModel
             int width = image.PixelWidth;
             int height = image.PixelHeight;
             int stride = (image.PixelWidth * image.Format.BitsPerPixel + 7) / 8;
-            byte[] pixels = new byte[width * stride];
-            Console.WriteLine(stride);
+            byte[] pixels = new byte[stride * height];
             image.CopyPixels(pixels, stride, 0);
 
             int i = 0;
@@ -126,12 +132,7 @@ namespace Outline.ViewModel
                 group s by num / 4 into g
                 select g.ToArray();
 
-            byte[][] groupedPixel = query.ToArray();
-            
-            foreach (var pixel in groupedPixel)
-            {
-                Console.WriteLine($"alpha: {pixel[0],2}, red: {pixel[1],2}, green: {pixel[2],2}, blue: {pixel[3],2}");
-            }
+//            byte[][] groupedPixel = query.ToArray();
             return pixels;
         }
 
