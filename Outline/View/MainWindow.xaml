@@ -11,9 +11,10 @@
     </Window.DataContext>
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel>
-            <Image MaxWidth="600px" MaxHeight="250px" Source="{Binding Path=OpenedImage}"></Image>
+            <Image MaxWidth="600px" MaxHeight="400px" Source="{Binding Path=OpenedImage}"></Image>
             <Button Margin="10" Width="50" Command="{Binding Path=OpenImage}">Button</Button>
-            <Image Source="{Binding Path=ResultingImage}"></Image>
+            <Image MaxWidth="600px" MaxHeight="400px" Source="{Binding Path=ResultingImage}"></Image>
+            <Button Margin="10" Width="50" Command="{Binding Path=ExportImage}">Export</Button>
         </StackPanel>
     </ScrollViewer>
 </Window>
